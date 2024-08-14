@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - Credit Card Showcase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #4a90e2;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .card {
+            width: 260px;
+            margin: 10px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .card-details {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 360px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+        }
+        .card-details img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            background-color: #4a90e2;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wallet</h1>
+    <div class="card-container" id="cardContainer"></div>
+    <div class="overlay" id="overlay"></div>
+    <div class="card-details" id="cardDetails"></div>
+
+    <script>
+        const cardData = [
+            { title: "Visa Credit Card", imageUrl: "https://via.placeholder.com/260x150?text=Visa", bank: "Visa Inc.", cardType: "Credit Card", details: "A widely accepted card with various rewards programs." },
+            { title: "MasterCard", imageUrl: "https://via.placeholder.com/260x150?text=MasterCard", bank: "MasterCard Inc.", cardType: "Credit Card", details: "Offers global acceptance and various security features." },
+            { title: "American Express", imageUrl: "https://via.placeholder.com/260x150?text=American+Express", bank: "American Express Company", cardType: "Charge Card", details: "Known for premium benefits and high credit limits." },
+            { title: "Discover Card", imageUrl: "https://via.placeholder.com/260x150?text=Discover", bank: "Discover Financial", cardType: "Credit Card", details: "Features cash back rewards and no annual fee." },
+            { title: "JCB Card", imageUrl: "https://via.placeholder.com/260x150?text=JCB", bank: "Japan Credit Bureau", cardType: "Credit Card", details: "Popular in Asia, offering various rewards and benefits." },
+            { title: "Diners Club Card", imageUrl: "https://via.placeholder.com/260x150?text=Diners+Club", bank: "Diners Club International", cardType: "Charge Card", details: "Offers luxury travel benefits and high spending limits." },
+            { title: "UnionPay Card", imageUrl: "https://via.placeholder.com/260x150?text=UnionPay", bank: "China UnionPay", cardType: "Credit Card", details: "Widely accepted in China and increasingly globally." },
+            { title: "Maestro Card", imageUrl: "https://via.placeholder.com/260x150?text=Maestro", bank: "MasterCard Inc.", cardType: "Debit Card", details: "Popular for debit transactions and ATM access." },
+            { title: "RuPay Card", imageUrl: "https://via.placeholder.com/260x150?text=RuPay", bank: "National Payments Corporation of India", cardType: "Debit Card", details: "Widely used in India with various domestic benefits." },
+            { title: "Elo Card", imageUrl: "https://via.placeholder.com/260x150?text=Elo", bank: "Elo Participações", cardType: "Credit Card", details: "A Brazilian card offering various local benefits." },
+            { title: "Kreditkarte Card", imageUrl: "https://via.placeholder.com/260x150?text=Kreditkarte", bank: "Various Banks", cardType: "Credit Card", details: "Used primarily in Europe with diverse features." },
+            { title: "CUP Card", imageUrl: "https://via.placeholder.com/260x150?text=CUP", bank: "China UnionPay", cardType: "Credit Card", details: "A global card with a focus on Chinese markets." },
+        ];
+
+        const cardContainer = document.getElementById('cardContainer');
+        const overlay = document.getElementById('overlay');
+        const cardDetails = document.getElementById('cardDetails');
+
+        cardData.forEach((data, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3>${data.title}</h3>
+                <img src="${data.imageUrl}" alt="${data.title}">
+            `;
+            card.addEventListener('click', () => showDetails(index));
+            cardContainer.appendChild(card);
+        });
+
+        function showDetails(index) {
+            const data = cardData[index];
+            cardDetails.innerHTML = `
+                <h2>${data.title}</h2>
+                <img src="${data.imageUrl}" alt="${data.title}">
+                <p><strong>Bank:</strong> ${data.bank}</p>
+                <p><strong>Card Type:</strong> ${data.cardType}</p>
+                <p>${data.details}</p>
+                <button onclick="hideDetails()">Close</button>
+            `;
+            cardDetails.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function hideDetails() {
+            cardDetails.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        overlay.addEventListener('click', hideDetails);
+    </script>
+</body>
+</html>
